@@ -1,0 +1,9 @@
+site_name: Miguel Dorta's Wiki
+site_url: https://wiki.migueldorta.com
+nav:
+  - Home: index.md
+  - Install BoringTun with UFW: boringtun.md
+  - Install HealthChecks on Debian 12: healthchecks.md
+  - Install oh-my-zsh system-wide: oh-my-zsh.md
+theme:
+  name: material
