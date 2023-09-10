@@ -1,18 +1,9 @@
----
-title: Install oh-my-zsh system-wide
-description: Guide to install oh-my-zsh for the entire system.
-published: true
-date: 2022-03-13T21:45:11.950Z
-tags:
-editor: markdown
-dateCreated: 2022-03-13T21:45:11.950Z
----
-
 # Install oh-my-zsh system-wide
 In this short guide, I will teach you how to easily install oh-my-zsh for an entire system.
 
 ## 1. Requisites
 You need to have the dependencies for oh-my-zsh installed in your system. Those are:
+
 - git
 - sudo
 - zsh
