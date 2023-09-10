@@ -1,9 +1,17 @@
-site_name: Miguel Dorta's Wiki
-site_url: https://wiki.migueldorta.com
+markdown_extensions:
+  - admonition
+  - attr_list
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.superfences
 nav:
   - Home: index.md
   - Install BoringTun with UFW: boringtun.md
   - Install HealthChecks on Debian 12: healthchecks.md
   - Install oh-my-zsh system-wide: oh-my-zsh.md
+site_name: Miguel Dorta's Wiki
+site_url: https://wiki.migueldorta.com
 theme:
   name: material
