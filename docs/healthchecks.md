@@ -212,7 +212,7 @@ systemctl enable healthchecks.service --now
 
 ## 11. Check everything is ok
 We can now browse and use HealthCheck in debug mode. It'll be hosted in the port 8000 of the server we've set up. If you see this, everything has worked correctly!
-![ok.png](/software-guides/healthchecks/ok.png){.align-center}
+![Screenshot showing HealthChecks working in debug mode](./healthchecks/ok.png){.align-center}
 
 ## 12. Switch off debug mode
 In order to disable debug mode, we need to execute the following commands. I did it with the services turned off.
@@ -220,10 +220,10 @@ In order to disable debug mode, we need to execute the following commands. I did
 /opt/healthchecks/venv/bin/python /opt/healthchecks/healthchecks/manage.py collectstatic
 /opt/healthchecks/venv/bin/python /opt/healthchecks/healthchecks/manage.py compress --force
 ```
-And finally we set `DEBUG=False` in out environment file (if you've followed this tutorial it's located in `/opt/healthchecks/.env`
+And finally we set `DEBUG=False` in out environment file (if you've followed this tutorial it's located in `/opt/healthchecks/.env`)
 
 Finally we turn HealthChecks up again, and check it's working correctly by visitting it.
-![production.png](/software-guides/healthchecks/production.png){.align-center}
+![Screenshot showing HealthChecks in production mode](./healthchecks/production.png){.align-center}
 Congrats! You now have HealthChecks running in your server!
 
 ## 13. Extra: Integration with a Telegram Bot

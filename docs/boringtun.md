@@ -135,7 +135,7 @@ systemctl status boringtun@wg0.service
 ### 4.1. Setup client
 I will use the [Official WireGuard App for Android](https://play.google.com/store/apps/details?id=com.wireguard.android), but the settings will be the same for any client. We need to create a new connection/profile and input our settings like this:
 
-![img_20220223_032410.jpg](/software-guides/boringtun/img_20220223_032410.jpg =70%x){.align-center}
+![Screenshot showing setup on Android](./boringtun/android-screenshot.jpg)
 
 The settings means:
 - **Interface**
