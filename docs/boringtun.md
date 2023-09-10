@@ -1,13 +1,3 @@
----
-title: Install BoringTun with UFW
-description: Install BoringTun (UserSpace WireGuard Implementation) in Debian 11 with UFW
-published: true
-date: 2022-02-23T04:05:20.841Z
-tags:
-editor: markdown
-dateCreated: 2022-02-22T09:16:49.873Z
----
-
 # Install BoringTun with UFW
 In this guide I will guide you to install BoringTun (an userspace implementation of WireGuard) in a system with UFW. I will use Debian 11, but it will work with most standard distros.
 
@@ -37,6 +27,7 @@ cat /etc/wireguard/private.key | wg pubkey > /etc/wireguard/public.key
 
 ### 2.2. Create config file
 We need to choose multiple settings for WireGuard. Those are:
+
 - **Range of IPs of our VPN:** I chose **192.168.128.1/24**
 - **Server listen port:** I chose the default WireGuard port, **51820**
 - **The name of the virtual network interface:** I chose **wg0**
@@ -45,7 +36,7 @@ We need to choose multiple settings for WireGuard. Those are:
 
 With our settings decided, we write the config file in `/etc/wireguard/<interface>.conf` (in my case, `/etc/wireguard/wg0.conf`) with the following content:
 
-```toml
+```cfg
 [Interface]
 Address = 192.168.128.1/24
 ListenPort = 51820
@@ -59,7 +50,7 @@ PreDown = iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 
 ### 2.3. Enable forwarding
 To enable forwarding, we need to edit the file `/etc/sysctl.conf`, and uncomment or add this line:
-```toml
+```cfg
 net.ipv4.ip_forward=1
 ```
 We can check the changes executing:
@@ -69,7 +60,7 @@ sysctl -p
 
 ### 2.4. Creating and enabling a firewall rule
 We need to create and enable a firewall rule to allow inbound connections. The way I find more maintainable is to create an application rule in UFW and enabling it. For this we create a file with path `/etc/ufw/applications.d/boringtun` with the following content:
-```toml
+```cfg
 [BoringTun]
 title=BoringTun
 description=Userspace implementation of WireGuard
@@ -101,7 +92,7 @@ cp /lib/systemd/system/wg-quick@.service /lib/systemd/system/boringtun@.service
 ```
 
 And we modify the content of the new file to add the environment variable that will use BoringTun as the WireGuard implementation, resulting in the file containing the following data:
-```toml
+```systemd
 [Unit]
 Description=BoringTun for %I
 After=network-online.target nss-lookup.target
@@ -138,16 +129,17 @@ I will use the [Official WireGuard App for Android](https://play.google.com/stor
 ![Screenshot showing setup on Android](./boringtun/android-screenshot.jpg)
 
 The settings means:
+
 - **Interface**
-  - **Name:** The name we want to identify the profile with.
-  - **Private key:** A generated private key
-  - **Public key:** The public key associated with the private key. We will need it for the server.
-  - **Addresses:** The range of IPs we want out device to take in the virtual network.
-  - **DNS servers:** IP of the DNS servers we want to use in the virtual connection.
+    - **Name:** The name we want to identify the profile with.
+    - **Private key:** A generated private key
+    - **Public key:** The public key associated with the private key. We will need it for the server.
+    - **Addresses:** The range of IPs we want out device to take in the virtual network.
+    - **DNS servers:** IP of the DNS servers we want to use in the virtual connection.
 - **Peer**
-  - **Public key:** The server public key.
-  - **Endpoint:** The public address (and port) of our server.
-  - **Allowed IPs:** The range of IPs we want to route through the VPN. I chose all of them.
+    - **Public key:** The server public key.
+    - **Endpoint:** The public address (and port) of our server.
+    - **Allowed IPs:** The range of IPs we want to route through the VPN. I chose all of them.
 
 ### 4.2. Setup server
 We need to set up our peer in the server config. For that we need to shut it down in the first place (since we set SaveConfig=true, and that would overwrite our changes). For that we execute:
@@ -156,7 +148,7 @@ systemctl stop boringtun@wg0.service
 ```
 
 Then we edit our server config (in my case `/etc/wireguard/wg0.conf`) and we add an entry per each peer we want to set up. The content of the file will result in something like:
-```toml
+```cfg
 [Interface]
 Address = 192.168.128.1/24
 SaveConfig = true
