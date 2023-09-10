@@ -1,26 +1,16 @@
----
-title: Install HealthChecks on Debian 12
-description: Guide to install HealthChecks.io software in Debian 12
-published: true
-date: 2023-06-19T11:13:36.131Z
-tags:
-editor: markdown
-dateCreated: 2023-05-29T01:04:48.206Z
----
-
 # Install HealthChecks on Debian 12
 In this guide I will guide you in the installation of the HealthChecks.io monitoring software in a server with Debian 11 or Debian 12. The [official one](https://healthchecks.io/docs/self_hosted/) is lacking in a lot of areas, so I'm aiming to provide a more complete guide for my use case (HealthChecks + MariaDB).
 
 This guide will install the software directly on the machine. If you want a guide to install and deploy using docker you can check this [official blog post](https://blog.healthchecks.io/2023/05/walk-through-set-up-self-hosted-healthchecks-instance-on-a-vps/).
 
-> Pēteris "cuu508" Caune, the creator of HealthChecks.io, gave me feedback on this guide. If you want to check his comments you can [see them here](https://www.reddit.com/r/selfhosted/comments/13yxtem/comment/jmpu1cs/?utm_source=share&utm_medium=web2x&context=3). I'm really thankful they took the time to read and comment about this, and most of their suggestions are applied in this guide. If there's a suggestion that is not present here, the reason for that is addressed in its section.
-{.is-info}
+!!! info
+    Pēteris "cuu508" Caune, the creator of HealthChecks.io, gave me feedback on this guide. If you want to check his comments you can [see them here](https://www.reddit.com/r/selfhosted/comments/13yxtem/comment/jmpu1cs/?utm_source=share&utm_medium=web2x&context=3). I'm really thankful they took the time to read and comment about this, and most of their suggestions are applied in this guide. If there's a suggestion that is not present here, the reason for that is addressed in its section.
 
 ## 1. (Optional) Install a database
 If your server is going to handle a lot of monitors with very frequent notifications, you should probably consider using a DBMS like MySQL or PostgreSQL. In this guide I will use MariaDB. You can find a great [installation guide here](https://www.digitalocean.com/community/tutorials/how-to-install-mariadb-on-debian-11).
 
 I'll create a database and an user in the database for HealthChecks with the following commands.
-```sql
+```mysql
 CREATE DATABASE healthchecks;
 GRANT ALL PRIVILEGES ON healthchecks.* TO 'healthchecks'@'localhost' IDENTIFIED BY '---password---';
 GRANT ALL PRIVILEGES ON test_healthchecks.* TO 'healthchecks'@'localhost' IDENTIFIED BY '---password---';
@@ -180,7 +170,7 @@ If you aren't going to use a reverse proxy that supports the uWSGI protocol (or 
 
 ## 10. Create systemd service
 Debian 12 and older uses systemd as init system. We are going to setup a service for HealthChecks to start it on boot. To archieve this, we will create a file with the following content in `/etc/systemd/system/healthchecks.service`
-```ini
+```systemd
 [Unit]
 Description=Healthchecks Server
 After=network.target
@@ -212,7 +202,7 @@ systemctl enable healthchecks.service --now
 
 ## 11. Check everything is ok
 We can now browse and use HealthCheck in debug mode. It'll be hosted in the port 8000 of the server we've set up. If you see this, everything has worked correctly!
-![Screenshot showing HealthChecks working in debug mode](./healthchecks/ok.png){.align-center}
+![Screenshot showing HealthChecks working in debug mode](./healthchecks/ok.png)
 
 ## 12. Switch off debug mode
 In order to disable debug mode, we need to execute the following commands. I did it with the services turned off.
@@ -223,14 +213,14 @@ In order to disable debug mode, we need to execute the following commands. I did
 And finally we set `DEBUG=False` in out environment file (if you've followed this tutorial it's located in `/opt/healthchecks/.env`)
 
 Finally we turn HealthChecks up again, and check it's working correctly by visitting it.
-![Screenshot showing HealthChecks in production mode](./healthchecks/production.png){.align-center}
+![Screenshot showing HealthChecks in production mode](./healthchecks/production.png)
 Congrats! You now have HealthChecks running in your server!
 
 ## 13. Extra: Integration with a Telegram Bot
 While HealthChecks already have a built-in integration with Telegram Bots, their integration relies in a WebHook. This requires exposing your HealthCheck Server to the Internet, which I really don't want to do for my use case. Luckily, Telegram Bots can work without need of webhooks, just making an HTTP request to the Telegram Servers specifying the chat and message to send.
 
-> Pēteris Caune points out that the WebHook is only needed for setting up the Telegram integration, after which it won't be necessary. They also mention that an alternative to the way I do it here is using the Apprise integration. I won't be covering neither of these alternatives in this guide.
-{.is-info}
+!!! info
+    Pēteris Caune points out that the WebHook is only needed for setting up the Telegram integration, after which it won't be necessary. They also mention that an alternative to the way I do it here is using the Apprise integration. I won't be covering neither of these alternatives in this guide.
 
 ### 13.1. Create a Telegram Bot
 Create a Telegram Bot, and get its API Key and also your chat ID. There are a lot of guides for this on the Internet.
